@@ -52,6 +52,7 @@ func findgoversion() string {
 	// The $GOROOT/VERSION file takes priority, for distributions
 	// without the source repo.
 	path := pathf("%s/VERSION", goroot)
+
 	if isfile(path) {
 		b := chomp(readfile(path))
 		// Commands such as "dist version > VERSION" will cause
