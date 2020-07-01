@@ -52,10 +52,14 @@ func _cmdbootstrap() {
 		clean()
 	}
 
+	// 创建部分目录2020.7.1
 	setup()
 
 	timelog("build", "toolchain1")
 	checkCC()
+
+	return
+
 	bootstrapBuildTools()
 
 	// Remember old content of $GOROOT/bin for comparison below.

@@ -174,3 +174,42 @@ echo GOROOT="$GOROOT_BOOTSTRAP" GOOS="" GOARCH="" "$GOROOT_BOOTSTRAP/bin/go" bui
 echo "GOPATH="$GOPATH
 GOROOT="$GOROOT_BOOTSTRAP" GOOS="" GOARCH="" "$GOROOT_BOOTSTRAP/bin/go" build -o cmd/dist/dist ./cmd/dist
 
+./cmd/dist/dist env -p
+echo
+
+# -e doesn't propagate out of eval, so check success by hand.
+eval $(./cmd/dist/dist env -p || echo FAIL=true)
+if [ "$FAIL" = true ]; then
+    exit 1
+fi
+
+if $verbose; then
+    echo
+fi
+
+if [ "$1" = "--dist-tool" ]; then
+    # Stop after building dist tool.
+    echo "GOTOOLDIR="$GOTOOLDIR
+    mkdir -p "$GOTOOLDIR"
+    if [ "$2" != "" ]; then
+        cp cmd/dist/dist "$2"
+    fi
+    mv cmd/dist/dist "$GOTOOLDIR"/dist
+    exit 0
+fi
+
+
+buildall="-a"
+if [ "$1" = "--no-clean" ]; then
+    buildall=""
+    shift
+fi
+echo
+echo "#### start bootstrap"
+
+# Run dist bootstrap to complete make.bash.
+# Bootstrap installs a proper cmd/dist, built with the new toolchain.
+# Throw ours, built with Go 1.4, away after bootstrap.
+echo ./cmd/dist/dist bootstrap $buildall $vflag $GO_DISTFLAGS "$@"
+./cmd/dist/dist bootstrap $buildall $vflag $GO_DISTFLAGS "$@"
+#rm -f ./cmd/dist/dist

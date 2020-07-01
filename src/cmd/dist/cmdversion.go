@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/zxy12/go_duplicate_112_new/src/zdebug"
 )
 
 func branchtag(branch string) (tag string, precise bool) {
@@ -53,6 +55,7 @@ func findgoversion() string {
 	// without the source repo.
 	path := pathf("%s/VERSION", goroot)
 
+	zdebug.T("goversion file:%v", path)
 	if isfile(path) {
 		b := chomp(readfile(path))
 		// Commands such as "dist version > VERSION" will cause

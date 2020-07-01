@@ -16,6 +16,7 @@ int supports_sse2() {
 }
 */
 import "C"
+import "fmt"
 
 func cansse2() bool { return C.supports_sse2() != 0 }
 
@@ -23,4 +24,6 @@ func useVFPv1() {}
 
 func useVFPv3() {}
 
-func useARMv6K() {}
+func useARMv6K() {
+	fmt.Println("useARMv6K")
+}
