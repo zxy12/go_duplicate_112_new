@@ -8,6 +8,7 @@ import (
 	"log"
 
 	"cmd/asm/internal/arch"
+	"cmd/asm/internal/flags"
 	"cmd/internal/objabi"
 )
 
@@ -23,8 +24,8 @@ func main() {
 	if architecture == nil {
 		log.Fatalf("unrecognized architecture %s", GOARCH)
 	}
+	flags.Parse()
 	/*
-		flags.Parse()
 
 		ctxt := obj.Linknew(architecture.LinkArch)
 		if *flags.PrintOut {

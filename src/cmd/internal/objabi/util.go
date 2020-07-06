@@ -5,15 +5,18 @@
 package objabi
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
-var (
-	framepointer_enabled     int = 1
-	Fieldtrack_enabled       int
-	Preemptibleloops_enabled int
-)
+func envOr(key, value string) string {
+	if x := os.Getenv(key); x != "" {
+		return x
+	}
+	return value
+}
 
 var (
 	defaultGOROOT string // set by linker
@@ -60,13 +63,77 @@ func gomips64() string {
 	panic("unreachable")
 }
 
-func envOr(key, value string) string {
-	if x := os.Getenv(key); x != "" {
-		return x
+func Getgoextlinkenabled() string {
+	return envOr("GO_EXTLINK_ENABLED", defaultGO_EXTLINK_ENABLED)
+}
+
+func init() {
+	for _, f := range strings.Split(goexperiment, ",") {
+		if f != "" {
+			addexp(f)
+		}
 	}
-	return value
 }
 
 func Framepointer_enabled(goos, goarch string) bool {
 	return framepointer_enabled != 0 && (goarch == "amd64" && goos != "nacl" || goarch == "arm64" && goos == "linux")
+}
+
+func addexp(s string) {
+	// Could do general integer parsing here, but the runtime copy doesn't yet.
+	v := 1
+	name := s
+	if len(name) > 2 && name[:2] == "no" {
+		v = 0
+		name = name[2:]
+	}
+	for i := 0; i < len(exper); i++ {
+		if exper[i].name == name {
+			if exper[i].val != nil {
+				*exper[i].val = v
+			}
+			return
+		}
+	}
+
+	fmt.Printf("unknown experiment %s\n", s)
+	os.Exit(2)
+}
+
+var (
+	framepointer_enabled     int = 1
+	Fieldtrack_enabled       int
+	Preemptibleloops_enabled int
+)
+
+// Toolchain experiments.
+// These are controlled by the GOEXPERIMENT environment
+// variable recorded when the toolchain is built.
+// This list is also known to cmd/gc.
+var exper = []struct {
+	name string
+	val  *int
+}{
+	{"fieldtrack", &Fieldtrack_enabled},
+	{"framepointer", &framepointer_enabled},
+	{"preemptibleloops", &Preemptibleloops_enabled},
+}
+
+var defaultExpstring = Expstring()
+
+func DefaultExpstring() string {
+	return defaultExpstring
+}
+
+func Expstring() string {
+	buf := "X"
+	for i := range exper {
+		if *exper[i].val != 0 {
+			buf += "," + exper[i].name
+		}
+	}
+	if buf == "X" {
+		buf += ",none"
+	}
+	return "X:" + buf[2:]
 }
