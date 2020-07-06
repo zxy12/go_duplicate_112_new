@@ -6,6 +6,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/zxy12/go_duplicate_112_new/src/zdebug"
 )
 
 // The bootstrap command runs a build from scratch,
@@ -56,9 +58,8 @@ func _cmdbootstrap() {
 	setup()
 
 	timelog("build", "toolchain1")
+	// 判断`clang --help`
 	checkCC()
-
-	return
 
 	bootstrapBuildTools()
 
@@ -77,6 +78,7 @@ func _cmdbootstrap() {
 
 	timelog("build", "go_bootstrap")
 	xprintf("Building Go bootstrap cmd/go (go_bootstrap) using Go toolchain1.\n")
+	// 编译 bin/asm bin/link bin/compile bin/cgo放到 pkg/bootstrap里面完毕
 
 	install("runtime") // dependency not visible in sources; also sets up textflag.h
 
@@ -116,7 +118,8 @@ func _cmdbootstrap() {
 	}
 	xprintf("Building Go toolchain2 using go_bootstrap and Go toolchain1.\n")
 	os.Setenv("CC", compilerEnvLookup(defaultcc, goos, goarch))
-
+	zdebug.T("%v", "MUST BREAK AT HERE")
+	return
 	goInstall(goBootstrap, append([]string{"-i"}, toolchain...)...)
 	if debug {
 		run("", ShowOutput|CheckExit, pathf("%s/compile", tooldir), "-V=full")
@@ -298,6 +301,7 @@ func checkCC() {
 	if !needCC() {
 		return
 	}
+	//zdebug.T("defaultcc=%+v", defaultcc)
 	if output, err := exec.Command(defaultcc[""], "--help").CombinedOutput(); err != nil {
 		outputHdr := ""
 		if len(output) > 0 {

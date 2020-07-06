@@ -17,6 +17,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/zxy12/go_duplicate_112_new/src/zdebug"
 )
 
 // bootstrapDirs is a list of directories holding code that must be
@@ -118,6 +120,7 @@ func bootstrapBuildTools() {
 	}
 	xprintf("Building Go toolchain1 using %s.\n", goroot_bootstrap)
 
+	// 动态生成一个gofile src/cmd/internal/objabi/zbootstrap.go
 	mkzbootstrap(pathf("%s/src/cmd/internal/objabi/zbootstrap.go", goroot))
 
 	// Use $GOROOT/pkg/bootstrap as the bootstrap workspace root.
@@ -140,8 +143,16 @@ func bootstrapBuildTools() {
 			// and for later in the main build.
 			mkzdefaultcc("", pathf("%s/zdefaultcc.go", src))
 		}
+
+		// 创建空目录 debug
+		/*
+			if !isdir(src) {
+				xmkdirall(src)
+			}
+		*/
 	Dir:
 		for _, name := range xreaddirfiles(src) {
+
 			for _, pre := range ignorePrefixes {
 				if strings.HasPrefix(name, pre) {
 					continue Dir
@@ -154,6 +165,7 @@ func bootstrapBuildTools() {
 			}
 			srcFile := pathf("%s/%s", src, name)
 			dstFile := pathf("%s/%s", dst, name)
+
 			text := bootstrapRewriteFile(srcFile)
 			writefile(text, dstFile, 0)
 		}
@@ -205,6 +217,11 @@ func bootstrapBuildTools() {
 		cmd = append(cmd, "-toolexec="+tool)
 	}
 	cmd = append(cmd, "bootstrap/cmd/...")
+
+	//environ := os.Environ()
+
+	zdebug.T("%v\n%v", "", cmd)
+
 	run(workspace, ShowOutput|CheckExit, cmd...)
 
 	// Copy binaries into tool binary directory.

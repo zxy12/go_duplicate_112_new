@@ -18,6 +18,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/zxy12/go_duplicate_112_new/src/zdebug"
 )
 
 // pathf is fmt.Sprintf for generating paths
@@ -157,6 +159,7 @@ func bgrun(wg *sync.WaitGroup, dir string, cmd ...string) {
 	wg.Add(1)
 	bgwork <- func() {
 		defer wg.Done()
+		zdebug.T("%v", cmd)
 		run(dir, CheckExit|ShowOutput|Background, cmd...)
 	}
 }
@@ -324,6 +327,7 @@ func xreaddirfiles(dir string) []string {
 			names = append(names, fi.Name())
 		}
 	}
+	// xprintf("bootstrapDir:%v,names%+v\n", dir, names)
 	return names
 }
 
