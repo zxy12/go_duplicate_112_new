@@ -80,6 +80,8 @@ func _cmdbootstrap() {
 	xprintf("Building Go bootstrap cmd/go (go_bootstrap) using Go toolchain1.\n")
 	// 编译 bin/asm bin/link bin/compile bin/cgo放到 pkg/bootstrap里面完毕
 
+	//install("zdebug") // test zdebug install
+
 	install("runtime") // dependency not visible in sources; also sets up textflag.h
 
 	install("cmd/go")

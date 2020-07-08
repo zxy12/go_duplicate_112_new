@@ -12,6 +12,7 @@ import (
 	"os"
 
 	"cmd/asm/internal/arch"
+	"cmd/asm/internal/asm"
 	"cmd/asm/internal/flags"
 	"cmd/asm/internal/lex"
 	"cmd/internal/bio"
@@ -65,18 +66,21 @@ func main() {
 
 	for _, f := range flag.Args() {
 		lexer := lex.NewLexer(f)
-		_ = lexer
-		//parser := asm.NewParser(ctxt, architecture, lexer)
-		//_, _ = lexer, parser
+		parser := asm.NewParser(ctxt, architecture, lexer)
+		ctxt.DiagFunc = func(format string, args ...interface{}) {
+			diag = true
+			log.Printf(format, args...)
+		}
+		if *flags.SymABIs {
+			ok = parser.ParseSymABIs(buf)
+		}
+		_, _ = lexer, parser
 
 	}
 	/*
 
 
-			ctxt.DiagFunc = func(format string, args ...interface{}) {
-				diag = true
-				log.Printf(format, args...)
-			}
+
 			if *flags.SymABIs {
 				ok = parser.ParseSymABIs(buf)
 			} else {
