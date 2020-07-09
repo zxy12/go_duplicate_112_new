@@ -75,44 +75,33 @@ func main() {
 		}
 		if *flags.SymABIs {
 			ok = parser.ParseSymABIs(buf)
+		} else {
+			pList := new(obj.Plist)
+			pList.Firstpc, ok = parser.Parse()
+			// reports errors to parser.Errorf
+			if ok {
+				obj.Flushplist(ctxt, pList, nil, "")
+			}
 		}
-		_, _ = lexer, parser
+		if !ok {
+			failedFile = f
+			break
+		}
 
 	}
-	/*
+	if ok && !*flags.SymABIs {
+		obj.WriteObjFile(ctxt, buf)
+	}
 
-
-
-			if *flags.SymABIs {
-				ok = parser.ParseSymABIs(buf)
-			} else {
-				pList := new(obj.Plist)
-				pList.Firstpc, ok = parser.Parse()
-				// reports errors to parser.Errorf
-				if ok {
-					obj.Flushplist(ctxt, pList, nil, "")
-				}
-			}
-			if !ok {
-				failedFile = f
-				break
-			}
+	if !ok || diag {
+		if failedFile != "" {
+			log.Printf("assembly of %s failed", failedFile)
+		} else {
+			log.Print("assembly failed")
 		}
-		if ok && !*flags.SymABIs {
-			obj.WriteObjFile(ctxt, buf)
-		}
-		if !ok || diag {
-			if failedFile != "" {
-				log.Printf("assembly of %s failed", failedFile)
-			} else {
-				log.Print("assembly failed")
-			}
-			out.Close()
-			os.Remove(*flags.OutputFile)
-			os.Exit(1)
-		}
-
-	*/
-	_, _, _ = ok, diag, failedFile
+		out.Close()
+		os.Remove(*flags.OutputFile)
+		os.Exit(1)
+	}
 	buf.Flush()
 }
