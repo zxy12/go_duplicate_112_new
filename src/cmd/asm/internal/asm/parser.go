@@ -93,6 +93,7 @@ func (p *Parser) pos() src.XPos {
 }
 
 func (p *Parser) Parse() (*obj.Prog, bool) {
+	t := zdebug.T
 	scratch := make([][]lex.Token, 0, 3)
 	for {
 		word, cond, operands, ok := p.line(scratch)
@@ -104,6 +105,7 @@ func (p *Parser) Parse() (*obj.Prog, bool) {
 		if p.pseudo(word, operands) {
 			continue
 		}
+
 		i, present := p.arch.Instructions[word]
 		if present {
 			p.instruction(i, word, cond, operands)
@@ -111,6 +113,8 @@ func (p *Parser) Parse() (*obj.Prog, bool) {
 		}
 		p.errorf("unrecognized instruction %q", word)
 	}
+	zdebug.T("p.firstProg=%v", p.firstProg)
+
 	if p.errorCount > 0 {
 		return nil, false
 	}
@@ -238,7 +242,7 @@ next:
 			p.errorf("missing operand")
 		}
 	}
-	zdebug.T("word=%v,operands=%v", word, operands)
+	//zdebug.T("word=%v,operands=%v", word, operands)
 
 	return word, cond, operands, true
 }

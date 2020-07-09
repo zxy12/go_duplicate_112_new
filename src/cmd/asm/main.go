@@ -18,6 +18,8 @@ import (
 	"cmd/internal/bio"
 	"cmd/internal/obj"
 	"cmd/internal/objabi"
+
+	"zdebug"
 )
 
 func main() {
@@ -78,6 +80,7 @@ func main() {
 		} else {
 			pList := new(obj.Plist)
 			pList.Firstpc, ok = parser.Parse()
+			zdebug.T("pList=%+v", pList)
 			// reports errors to parser.Errorf
 			if ok {
 				obj.Flushplist(ctxt, pList, nil, "")
@@ -89,6 +92,7 @@ func main() {
 		}
 
 	}
+	// 把xxx.s最终处理出来的东西写到目标文件中
 	if ok && !*flags.SymABIs {
 		obj.WriteObjFile(ctxt, buf)
 	}
