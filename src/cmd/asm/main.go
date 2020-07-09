@@ -65,7 +65,9 @@ func main() {
 	var failedFile string
 
 	for _, f := range flag.Args() {
+		// lexer 词法解析
 		lexer := lex.NewLexer(f)
+		// parser 语义解析
 		parser := asm.NewParser(ctxt, architecture, lexer)
 		ctxt.DiagFunc = func(format string, args ...interface{}) {
 			diag = true

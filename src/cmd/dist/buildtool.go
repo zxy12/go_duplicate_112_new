@@ -95,6 +95,7 @@ var bootstrapDirs = []string{
 	"math/big",
 	"math/bits",
 	"sort",
+	"zdebug", // hacked by zxy, 只要把这个目录文件copy过去，就可以在bootstrap的gopath里面用了，目前还是用已有的go环境编译，等asm、link等编译出来，才是新的go环境
 }
 
 // File prefixes that are ignored by go/build anyway, and cause
@@ -223,6 +224,28 @@ func bootstrapBuildTools() {
 	zdebug.T("%v\n%v", "", cmd)
 
 	run(workspace, ShowOutput|CheckExit, cmd...)
+
+	/*
+		// 安装zdebug
+		cmd = []string{
+			pathf("%s/bin/go", goroot_bootstrap),
+			"install",
+		}
+		if vflag > 0 {
+			cmd = append(cmd, "-v")
+		}
+		if tool := os.Getenv("GOBOOTSTRAP_TOOLEXEC"); tool != "" {
+			cmd = append(cmd, "-toolexec="+tool)
+		}
+		cmd = append(cmd, "bootstrap/zdebug/")
+
+		//environ := os.Environ()
+
+		zdebug.T("%v\n%v", "", cmd)
+
+		run(workspace, ShowOutput|CheckExit, cmd...)
+
+	*/
 
 	// Copy binaries into tool binary directory.
 	for _, name := range bootstrapDirs {

@@ -22,6 +22,8 @@ import (
 	"cmd/internal/obj/x86"
 	"cmd/internal/src"
 	"cmd/internal/sys"
+
+	"zdebug"
 )
 
 type Parser struct {
@@ -166,6 +168,8 @@ next:
 	}
 	word, cond = p.lex.Text(), ""
 	operands = scratch[:0]
+	//zdebug.T("%+v,%v,%v,%T", operands, cap(operands), len(operands), operands)
+
 	// Zero or more comma-separated operands, one per loop.
 	nesting := 0
 	colon := -1
@@ -234,6 +238,8 @@ next:
 			p.errorf("missing operand")
 		}
 	}
+	zdebug.T("word=%v,operands=%v", word, operands)
+
 	return word, cond, operands, true
 }
 

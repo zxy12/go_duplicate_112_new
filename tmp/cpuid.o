@@ -1,2 +1,1 @@
-go object darwin amd64 go 1.12 zxy, modified by zxy
-!
+def "".cpuid ABI0
