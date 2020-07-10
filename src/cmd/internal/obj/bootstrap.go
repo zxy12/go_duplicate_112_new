@@ -11,6 +11,9 @@ import (
 	"sort"
 )
 
+/**
+用less方法给slice排序
+*/
 func SortSlice(slice interface{}, less func(i, j int) bool) {
 	val := reflect.ValueOf(slice)
 	tmp := reflect.New(val.Type().Elem()).Elem()

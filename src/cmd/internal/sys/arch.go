@@ -27,7 +27,7 @@ const (
 // Arch represents an individual architecture.
 type Arch struct {
 	Name   string
-	Family ArchFamily
+	Family ArchFamily // byte
 
 	ByteOrder binary.ByteOrder
 

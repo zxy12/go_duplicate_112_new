@@ -240,7 +240,7 @@ const (
 // Link holds the context for writing object code from a compiler
 // to be linker input or for reading that input into the linker.
 type Link struct {
-	Headtype           objabi.HeadType
+	Headtype           objabi.HeadType //uint8
 	Arch               *LinkArch
 	Debugasm           int
 	Debugvlog          bool
@@ -285,15 +285,15 @@ type Link struct {
 
 // An LSym is the sort of symbol that is written to an object file.
 type LSym struct {
-	Name string
-	Type objabi.SymKind
-	Attribute
+	Name      string
+	Type      objabi.SymKind
+	Attribute //uint16
 
 	RefIdx int // Index of this symbol in the symbol reference list.
 	Size   int64
 	Gotype *LSym
 	P      []byte
-	R      []Reloc
+	R      []Reloc // 使用了一个常量字典的结构体RelocType
 
 	Func *FuncInfo
 }
@@ -390,7 +390,7 @@ type Prog struct {
 	Pc       int64    // for back ends or assembler: virtual or actual program counter, depending on phase
 	Pos      src.XPos // source position of this instruction
 	Spadj    int32    // effect of instruction on stack pointer (increment or decrement amount)
-	As       As       // assembler opcode
+	As       As       // assembler opcode // int6
 	Reg      int16    // 2nd source operand
 	RegTo2   int16    // 2nd destination operand
 	Mark     uint16   // bitmask of arch-specific items
@@ -405,9 +405,9 @@ type Prog struct {
 type Addr struct {
 	Reg    int16
 	Index  int16
-	Scale  int16 // Sometimes holds a register.
-	Type   AddrType
-	Name   AddrName
+	Scale  int16    // Sometimes holds a register.
+	Type   AddrType // uint8
+	Name   AddrName // int8
 	Class  int8
 	Offset int64
 	Sym    *LSym

@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"fmt"
 	"text/scanner"
+	"zdebug"
 
 	"cmd/asm/internal/arch"
 	"cmd/asm/internal/flags"
@@ -492,6 +493,7 @@ func (p *Parser) asmJump(op obj.As, cond string, a []obj.Addr) {
 }
 
 func (p *Parser) patch() {
+	zdebug.T("toPath:%+v,len=%v,cap=%v", p.toPatch, len(p.toPatch), cap(p.toPatch))
 	for _, patch := range p.toPatch {
 		targetProg := p.labels[patch.label]
 		if targetProg == nil {

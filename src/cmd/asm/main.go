@@ -18,8 +18,6 @@ import (
 	"cmd/internal/bio"
 	"cmd/internal/obj"
 	"cmd/internal/objabi"
-
-	"zdebug"
 )
 
 func main() {
@@ -79,8 +77,17 @@ func main() {
 			ok = parser.ParseSymABIs(buf)
 		} else {
 			pList := new(obj.Plist)
+			// zdebug.T("ctxt=%+v", ctxt)
+			/**
+			Parse：
+			1. line：逐词解析
+			2. pseudo： 伪指令？
+				asmText： TEXT解析
+					patch：
+
+			*/
 			pList.Firstpc, ok = parser.Parse()
-			zdebug.T("pList=%+v", pList)
+			// zdebug.T("ctxt=%+v", ctxt)
 			// reports errors to parser.Errorf
 			if ok {
 				obj.Flushplist(ctxt, pList, nil, "")

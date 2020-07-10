@@ -93,9 +93,9 @@ func (p *Parser) pos() src.XPos {
 }
 
 func (p *Parser) Parse() (*obj.Prog, bool) {
-	t := zdebug.T
 	scratch := make([][]lex.Token, 0, 3)
 	for {
+		// line: 字符读取和处理
 		word, cond, operands, ok := p.line(scratch)
 		if !ok {
 			break
