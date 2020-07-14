@@ -10,7 +10,7 @@ package src
 // XPos is a more compact representation of Pos.
 type XPos struct {
 	index int32
-	lico
+	lico  // uint32
 }
 
 // NoXPos is a valid unknown position.

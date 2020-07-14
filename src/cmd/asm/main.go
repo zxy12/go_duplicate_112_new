@@ -44,6 +44,7 @@ func main() {
 	ctxt.Bso = bufio.NewWriter(os.Stdout)
 	defer ctxt.Bso.Flush()
 
+	// Arch.Init(Link)
 	architecture.Init(ctxt)
 
 	// Create object file, write header.

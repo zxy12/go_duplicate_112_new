@@ -174,7 +174,7 @@ echo GOROOT="$GOROOT_BOOTSTRAP" GOOS="" GOARCH="" "$GOROOT_BOOTSTRAP/bin/go" bui
 echo "GOPATH="$GOPATH
 GOROOT="$GOROOT_BOOTSTRAP" GOOS="" GOARCH="" "$GOROOT_BOOTSTRAP/bin/go" build -o cmd/dist/dist ./cmd/dist
 
-./cmd/dist/dist env -p
+# ./cmd/dist/dist env -p
 echo
 
 # -e doesn't propagate out of eval, so check success by hand.
