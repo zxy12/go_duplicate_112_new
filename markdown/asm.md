@@ -18,9 +18,11 @@ arch.go:
     architecture(Arch).linkarch x86.Linkamd64
     ctxt: Link
     Arch.Init -> cmd.internal.obj.x86.asm6.instinit
-    Plist:Curfn, Prog 一条机器指令
+    Plist: 包含Curfn, Prog 一条机器指令
     As: Opcode
     For example, MOVL R1, R2 encodes using only As=MOVL, From=R1, To=R2.
+    Addr:
+    LSym:
 
 ### cmd/internal/sys/ 
 arch.go: 
