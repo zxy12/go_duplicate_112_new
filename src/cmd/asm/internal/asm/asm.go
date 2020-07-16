@@ -120,6 +120,8 @@ func (p *Parser) asmText(operands [][]lex.Token) {
 
 	// Operand 0 is the symbol name in the form foo(SB).
 	// That means symbol plus indirect on SB and no offset.
+	// TEXT    "".cpuid(SB), $0-12
+	// word=TEXT,cond=,operands=[["".cpuid ( SB )] [$ 0 - 12]]
 	nameAddr := p.address(operands[0])
 	if !p.validSymbol("TEXT", &nameAddr, false) {
 		return
@@ -183,6 +185,7 @@ func (p *Parser) asmText(operands [][]lex.Token) {
 	}
 	nameAddr.Sym.Func.Text = prog
 	prog.To.Val = int32(argSize)
+	zdebug.T("new prog=%+v", prog)
 	p.append(prog, "", true)
 }
 

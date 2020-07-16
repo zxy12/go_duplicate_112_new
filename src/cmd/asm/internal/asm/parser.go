@@ -92,11 +92,15 @@ func (p *Parser) pos() src.XPos {
 	return p.ctxt.PosTable.XPos(src.MakePos(p.lex.Base(), uint(p.lineNum), 0))
 }
 
+// Parser parse line
 func (p *Parser) Parse() (*obj.Prog, bool) {
 	scratch := make([][]lex.Token, 0, 3)
 	for {
 		// line: 字符读取和处理
+		// TEXT ·cpuid(SB),$0-12
+		// word=TEXT,cond=,operands=[["".cpuid ( SB )] [$ 0 - 12]],ok=true
 		word, cond, operands, ok := p.line(scratch)
+		// zdebug.T("word=%v,cond=%v,operands=%v,ok=%v", word, cond, operands, ok)
 		if !ok {
 			break
 		}

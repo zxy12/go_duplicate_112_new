@@ -104,6 +104,7 @@ func (t *Tokenizer) Next() ScanToken {
 	s := t.s
 	for {
 		t.tok = ScanToken(s.Scan())
+		// fmt.Printf("tok=%d,%T, comment=%v,%T, intent=%v, int=%v\n", t.tok, t.tok, scanner.Comment, scanner.Comment, scanner.Ident, scanner.Int)
 		if t.tok != scanner.Comment {
 			break
 		}

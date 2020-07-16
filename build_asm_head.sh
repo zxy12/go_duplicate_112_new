@@ -14,3 +14,4 @@ GOMIPS64=hardfloat
 GOROOT_FINAL=/Users/zhouxinyu/www/localhost/src/github.com/zxy12/go_duplicate_112_new
 GOCACHE=/Users/zhouxinyu/www/localhost/src/github.com/zxy12/go_duplicate_112_new/pkg/obj/go-build
 GOBIN=
+PATH=$GOROOT/bin:$PATH
