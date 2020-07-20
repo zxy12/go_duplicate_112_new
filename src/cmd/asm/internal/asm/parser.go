@@ -111,6 +111,7 @@ func (p *Parser) Parse() (*obj.Prog, bool) {
 		}
 
 		i, present := p.arch.Instructions[word]
+		// zdebug.T("%v", p.arch.Instructions)
 		if present {
 			p.instruction(i, word, cond, operands)
 			continue
@@ -252,6 +253,7 @@ next:
 }
 
 func (p *Parser) instruction(op obj.As, word, cond string, operands [][]lex.Token) {
+	zdebug.T("op=%v,word=%v,cond=%v,operands=%v", op, word, cond, operands)
 	p.addr = p.addr[0:0]
 	p.isJump = p.arch.IsJump(word)
 	for _, op := range operands {
@@ -377,8 +379,10 @@ func (p *Parser) operand(a *obj.Addr) {
 	name := tok.String()
 	if tok.ScanToken == scanner.Ident && !p.atStartOfRegister(name) {
 		// We have a symbol. Parse $sym±offset(symkind)
+
 		p.symbolReference(a, name, prefix)
-		// fmt.Printf("SYM %s\n", obj.Dconv(&emptyProg, 0, a))
+		zdebug.T("a=%v,name=[%v],prefix=%v, peek=%v", a, name, prefix, p.peek())
+		// fmt.Printf("SYM %s\n", obj.Dconv(&emptyProg, a))
 		if p.peek() == scanner.EOF {
 			return
 		}
@@ -769,6 +773,7 @@ func (p *Parser) symbolReference(a *obj.Addr, name string, prefix rune) {
 	} else {
 		a.Sym = p.ctxt.Lookup(name)
 	}
+	zdebug.T("isStatic=%v,a.Sym=%v, a.Type=%v", isStatic, a.Sym, a.Type)
 	if p.peek() == scanner.EOF {
 		if prefix == 0 && p.isJump {
 			// Symbols without prefix or suffix are jump labels.
@@ -1292,6 +1297,7 @@ func (p *Parser) next() lex.Token {
 	}
 	tok := p.input[p.inputPos]
 	p.inputPos++
+	// zdebug.T("next-tok=%v", tok)
 	return tok
 }
 
@@ -1304,6 +1310,7 @@ func (p *Parser) back() {
 }
 
 func (p *Parser) peek() lex.ScanToken {
+	// zdebug.T("p.input=%v,len=%v,pos=%v", p.input, len(p.input), p.inputPos)
 	if p.more() {
 		return p.input[p.inputPos].ScanToken
 	}
