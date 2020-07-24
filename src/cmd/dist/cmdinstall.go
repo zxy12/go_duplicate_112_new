@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/zxy12/go_duplicate_112_new/src/zdebug"
 )
 
 func _cmdinstall() {
@@ -120,6 +122,7 @@ func runInstall(dir string, ch chan struct{}) {
 	// Everything in that directory, and any target-specific
 	// additions.
 	files := xreaddir(path)
+	zdebug.T("install-src[%v]", path)
 
 	// Remove files beginning with . or _,
 	// which are likely to be editor temporary files.
@@ -175,6 +178,7 @@ func runInstall(dir string, ch chan struct{}) {
 		}
 		return true
 	})
+	zdebug.T("run-install[%v],[%v]", link, files)
 
 	// If there are no files to compile, we're done.
 	if len(files) == 0 {

@@ -28,6 +28,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+// 只是uint8变量字典
 package objabi
 
 // A SymKind describes the kind of memory represented by a symbol.

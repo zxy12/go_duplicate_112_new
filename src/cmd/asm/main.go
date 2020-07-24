@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"zdebug"
 
 	"cmd/asm/internal/arch"
 	"cmd/asm/internal/asm"
@@ -23,6 +24,8 @@ import (
 func main() {
 	log.SetFlags(0)
 	log.SetPrefix("asm: ")
+
+	zdebug.T("---%v---", "asm")
 
 	GOARCH := objabi.GOARCH
 

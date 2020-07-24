@@ -73,6 +73,7 @@ func run(dir string, mode int, cmd ...string) string {
 		errprintf("run: %s\n", strings.Join(cmd, " "))
 	}
 
+	zdebug.T("%v,dir=%v,mode=%v", cmd, dir, mode)
 	xcmd := exec.Command(cmd[0], cmd[1:]...)
 	xcmd.Dir = dir
 	var data []byte
@@ -159,7 +160,7 @@ func bgrun(wg *sync.WaitGroup, dir string, cmd ...string) {
 	wg.Add(1)
 	bgwork <- func() {
 		defer wg.Done()
-		zdebug.T("%v", cmd)
+		zdebug.T("bgrun[%v]", cmd)
 		run(dir, CheckExit|ShowOutput|Background, cmd...)
 	}
 }

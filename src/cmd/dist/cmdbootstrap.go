@@ -120,9 +120,11 @@ func _cmdbootstrap() {
 	}
 	xprintf("Building Go toolchain2 using go_bootstrap and Go toolchain1.\n")
 	os.Setenv("CC", compilerEnvLookup(defaultcc, goos, goarch))
+
+	zdebug.T("[%v],[%v]", goBootstrap, toolchain)
+	//goInstall(goBootstrap, append([]string{"-i"}, toolchain...)...)
 	zdebug.T("%v", "MUST BREAK AT HERE")
 	return
-	goInstall(goBootstrap, append([]string{"-i"}, toolchain...)...)
 	if debug {
 		run("", ShowOutput|CheckExit, pathf("%s/compile", tooldir), "-V=full")
 		run("", ShowOutput|CheckExit, pathf("%s/buildid", tooldir), pathf("%s/pkg/%s_%s/runtime/internal/sys.a", goroot, goos, goarch))

@@ -1,5 +1,7 @@
 package main
 
+import "zdebug"
+
 func main() {
-	println("cmd/cgo")
+	zdebug.T("---%v---", "cgo")
 }
