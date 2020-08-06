@@ -83,8 +83,10 @@ func _cmdbootstrap() {
 	//install("zdebug") // test zdebug install
 
 	install("runtime") // dependency not visible in sources; also sets up textflag.h
-
+	zdebug.T("%v", "MUST BREAK AT HERE")
+	return
 	install("cmd/go")
+
 	if vflag > 0 {
 		xprintf("\n")
 	}

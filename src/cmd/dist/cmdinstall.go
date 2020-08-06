@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -60,6 +61,7 @@ func startInstall(dir string) chan struct{} {
 // runInstall installs the library, package, or binary associated with dir,
 // which is relative to $GOROOT/src.
 func runInstall(dir string, ch chan struct{}) {
+
 	if dir == "net" || dir == "os/user" || dir == "crypto/x509" {
 		fatalf("go_bootstrap cannot depend on cgo package %s", dir)
 	}
@@ -79,6 +81,7 @@ func runInstall(dir string, ch chan struct{}) {
 	}
 
 	workdir := pathf("%s/%s", workdir, dir)
+	xmkdirall(workdir)
 
 	var clean []string
 	defer func() {
@@ -122,7 +125,7 @@ func runInstall(dir string, ch chan struct{}) {
 	// Everything in that directory, and any target-specific
 	// additions.
 	files := xreaddir(path)
-	zdebug.T("install-src[%v]", path)
+	//zdebug.T("install-src[%v]", path)
 
 	// Remove files beginning with . or _,
 	// which are likely to be editor temporary files.
@@ -149,6 +152,8 @@ func runInstall(dir string, ch chan struct{}) {
 			files[i] = pathf("%s/%s", path, p)
 		}
 	}
+
+	// zdebug.T("files=%v", files)
 
 	// Is the target up-to-date?
 	var gofiles, sfiles, missing []string
@@ -178,8 +183,7 @@ func runInstall(dir string, ch chan struct{}) {
 		}
 		return true
 	})
-	zdebug.T("run-install[%v],[%v]", link, files)
-
+	//zdebug.T("run-install[%v],sfiles[%v]", link, sfiles)
 	// If there are no files to compile, we're done.
 	if len(files) == 0 {
 		return
@@ -236,12 +240,15 @@ func runInstall(dir string, ch chan struct{}) {
 		deps = append(deps, readimports(p)...)
 	}
 
+	fmt.Println("---------", dir, "--------", deps)
 	for _, dir1 := range deps {
 		startInstall(dir1)
 	}
 	for _, dir1 := range deps {
 		install(dir1)
 	}
+
+	zdebug.T("deps[%v] done", deps)
 
 	if goos != gohostos || goarch != gohostarch {
 		// We've generated the right files; the go command can do the build.
@@ -274,6 +281,7 @@ func runInstall(dir string, ch chan struct{}) {
 	if len(sfiles) > 0 {
 		symabis = pathf("%s/symabis", workdir)
 		var wg sync.WaitGroup
+		fmt.Printf("\ngoasmh=%v,asmArgs=%v", goasmh, asmArgs)
 		asmabis := append(asmArgs[:len(asmArgs):len(asmArgs)], "-gensymabis", "-o", symabis)
 		asmabis = append(asmabis, sfiles...)
 		if err := ioutil.WriteFile(goasmh, nil, 0666); err != nil {
