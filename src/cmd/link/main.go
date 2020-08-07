@@ -19,7 +19,6 @@ import (
 	"cmd/link/internal/x86"
 	"fmt"
 	"os"
-	"zdebug"
 )
 
 // The bulk of the linker implementation lives in cmd/link/internal/ld.
@@ -39,7 +38,7 @@ import (
 func main() {
 	var arch *sys.Arch
 	var theArch ld.Arch
-	zdebug.T("---%v---", "link")
+	// zdebug.T("---%v---", "link")
 	switch objabi.GOARCH {
 	default:
 		fmt.Fprintf(os.Stderr, "link: unknown architecture %q\n", objabi.GOARCH)

@@ -21,7 +21,6 @@ import (
 	"os"
 
 	"log"
-	"zdebug"
 )
 
 var archInits = map[string]func(*gc.Arch){
@@ -44,7 +43,7 @@ func main() {
 	// disable timestamps for reproducible output
 	log.SetFlags(0)
 	log.SetPrefix("compile: ")
-	zdebug.T("---%v---", "compile")
+	// zdebug.T("---%v---", "compile")
 
 	archInit, ok := archInits[objabi.GOARCH]
 	if !ok {

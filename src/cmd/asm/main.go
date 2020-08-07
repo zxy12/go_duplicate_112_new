@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"zdebug"
 
 	"cmd/asm/internal/arch"
 	"cmd/asm/internal/asm"
@@ -25,7 +24,7 @@ func main() {
 	log.SetFlags(0)
 	log.SetPrefix("asm: ")
 
-	zdebug.T("---%v---", "asm")
+	// zdebug.T("---%v---", "asm")
 
 	GOARCH := objabi.GOARCH
 
@@ -61,7 +60,7 @@ func main() {
 
 	// 输出一行字到x.o文件
 	if !*flags.SymABIs {
-		fmt.Fprintf(buf, "go object %s %s %s, modified by zxy\n", objabi.GOOS, objabi.GOARCH, objabi.Version)
+		fmt.Fprintf(buf, "go object %s %s %s\n", objabi.GOOS, objabi.GOARCH, objabi.Version)
 		fmt.Fprintf(buf, "!\n")
 	}
 

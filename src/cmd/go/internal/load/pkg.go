@@ -262,7 +262,7 @@ func (p *Package) copyBuild(pp *build.Package) {
 
 	// TODO? Target
 	p.Goroot = pp.Goroot
-	p.Standard = p.Goroot && p.ImportPath != "" && search.IsStandardImportPath(p.ImportPath)
+	p.Standard = (p.Goroot && p.ImportPath != "" && search.IsStandardImportPath(p.ImportPath) || p.ImportPath == "github.com/zxy12/go_duplicate_112_new/src/zdebug")
 	p.GoFiles = pp.GoFiles
 	p.CgoFiles = pp.CgoFiles
 	p.IgnoredGoFiles = pp.IgnoredGoFiles
